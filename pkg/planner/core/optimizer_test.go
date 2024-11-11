@@ -15,6 +15,7 @@
 package core
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 	"testing"
@@ -157,6 +158,8 @@ func TestHandleFineGrainedShuffle(t *testing.T) {
 		}
 		val := reflect.ValueOf(p)
 		actStreamCount := reflect.Indirect(val).FieldByName("TiFlashFineGrainedShuffleStreamCount").Interface().(uint64)
+		fmt.Println("actStreamCount:", actStreamCount)
+		fmt.Println("expStreamCount:", expStreamCount)
 		require.Equal(t, uint64(expStreamCount), actStreamCount)
 		for _, child := range p.Children() {
 			check(child, expStreamCount, expChildCount, curChildCount+1)

@@ -15,6 +15,7 @@
 package core
 
 import (
+	"fmt"
 	"math/bits"
 
 	"github.com/pingcap/tidb/pkg/expression"
@@ -161,10 +162,10 @@ func (*joinReorderDPSolver) bfsGraph(startNode int, visited []bool, adjacents []
 	return visitID2NodeID
 }
 
-// dpGraph is the core part of this algorithm.
-// It implements the traditional join reorder algorithm: DP by subset using the following formula:
+// dpGraph 是这个算法的核心部分。
+// 它实现了传统的连接重排序算法：通过子集的动态规划，使用以下公式：
 //
-//	bestPlan[S:set of node] = the best one among Join(bestPlan[S1:subset of S], bestPlan[S2: S/S1])
+//	bestPlan[S:节点集合] = Join(bestPlan[S1:S的子集], bestPlan[S2:S/S1]) 中最优的一个
 func (s *joinReorderDPSolver) dpGraph(visitID2NodeID, nodeID2VisitID []int, _ []base.LogicalPlan,
 	totalEqEdges []joinGroupEqEdge, totalNonEqEdges []joinGroupNonEqEdge, tracer *joinReorderTrace) (base.LogicalPlan, error) {
 	nodeCnt := uint(len(visitID2NodeID))
@@ -195,6 +196,8 @@ func (s *joinReorderDPSolver) dpGraph(visitID2NodeID, nodeID2VisitID []int, _ []
 				continue
 			}
 			join, err := s.newJoinWithEdge(bestPlan[sub].p, bestPlan[remain].p, usedEdges, otherConds)
+			// fmt.Println("join:", join)
+			// fmt.Println('\n')
 			if err != nil {
 				return nil, err
 			}
@@ -211,6 +214,7 @@ func (s *joinReorderDPSolver) dpGraph(visitID2NodeID, nodeID2VisitID []int, _ []
 			}
 		}
 	}
+	fmt.Println("bestPlan:", bestPlan[(1<<nodeCnt)-1].p)
 	return bestPlan[(1<<nodeCnt)-1].p, nil
 }
 

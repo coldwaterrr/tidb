@@ -28,22 +28,18 @@ type joinReorderGreedySolver struct {
 	*baseSingleGroupJoinOrderSolver
 }
 
-// solve reorders the join nodes in the group based on a greedy algorithm.
+// solve 基于贪心算法重新排序组中的连接节点。
 //
-// For each node having a join equal condition with the current join tree in
-// the group, calculate the cumulative join cost of that node and the join
-// tree, choose the node with the smallest cumulative cost to join with the
-// current join tree.
+// 对于组中与当前连接树具有连接等值条件的每个节点，计算该节点与连接树的累积连接成本，选择累积成本最小的节点与当前连接树连接。
 //
-// cumulative join cost = CumCount(lhs) + CumCount(rhs) + RowCount(join)
+// 累积连接成本 = CumCount(lhs) + CumCount(rhs) + RowCount(join)
 //
-//	For base node, its CumCount equals to the sum of the count of its subtree.
-//	See baseNodeCumCost for more details.
+//	对于基础节点，其 CumCount 等于其子树计数的总和。
+//	有关更多详细信息，请参见 baseNodeCumCost。
 //
-// TODO: this formula can be changed to real physical cost in future.
+// TODO: 这个公式将来可以改为实际的物理成本。
 //
-// For the nodes and join trees which don't have a join equal condition to
-// connect them, we make a bushy join tree to do the cartesian joins finally.
+// 对于没有连接等值条件来连接它们的节点和连接树，我们最终会生成一个灌木连接树来进行笛卡尔连接。
 func (s *joinReorderGreedySolver) solve(joinNodePlans []base.LogicalPlan, tracer *joinReorderTrace) (base.LogicalPlan, error) {
 	var err error
 	s.curJoinGroup, err = s.generateJoinOrderNode(joinNodePlans, tracer)
@@ -52,8 +48,8 @@ func (s *joinReorderGreedySolver) solve(joinNodePlans []base.LogicalPlan, tracer
 	}
 	var leadingJoinNodes []*jrNode
 	if s.leadingJoinGroup != nil {
-		// We have a leading hint to let some tables join first. The result is stored in the s.leadingJoinGroup.
-		// We generate jrNode separately for it.
+		// 我们有一个 leading hint 来让一些表先连接。结果存储在 s.leadingJoinGroup 中。
+		// 我们为它单独生成 jrNode。
 		leadingJoinNodes, err = s.generateJoinOrderNode([]base.LogicalPlan{s.leadingJoinGroup}, tracer)
 		if err != nil {
 			return nil, err
@@ -79,13 +75,13 @@ func (s *joinReorderGreedySolver) solve(joinNodePlans []base.LogicalPlan, tracer
 			return nil, err
 		}
 		if joinNodeNum > 0 && len(s.curJoinGroup) == joinNodeNum {
-			// Getting here means that there is no join condition between the table used in the leading hint and other tables
-			// For example: select /*+ leading(t3) */ * from t1 join t2 on t1.a=t2.a cross join t3
-			// We can not let table t3 join first.
-			// TODO(hawkingrei): we find the problem in the TestHint.
+			// 到这里意味着 leading hint 中使用的表与其他表之间没有连接条件
+			// 例如: select /*+ leading(t3) */ * from t1 join t2 on t1.a=t2.a cross join t3
+			// 我们不能让表 t3 先连接。
+			// TODO(hawkingrei): 我们在 TestHint 中发现了这个问题。
 			// 	`select * from t1, t2, t3 union all select /*+ leading(t3, t2) */ * from t1, t2, t3 union all select * from t1, t2, t3`
-			//  this sql should not return the warning. but It will not affect the result. so we will fix it as soon as possible.
-			s.ctx.GetSessionVars().StmtCtx.SetHintWarning("leading hint is inapplicable, check if the leading hint table has join conditions with other tables")
+			//  这个 SQL 不应该返回警告，但它不会影响结果，所以我们会尽快修复它。
+			s.ctx.GetSessionVars().StmtCtx.SetHintWarning("leading hint 无效，请检查 leading hint 表是否与其他表有连接条件")
 		}
 		cartesianGroup = append(cartesianGroup, newNode.p)
 	}

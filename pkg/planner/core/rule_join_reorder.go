@@ -505,6 +505,8 @@ func (s *baseSingleGroupJoinOrderSolver) baseNodeCumCost(groupNode base.LogicalP
 func (s *baseSingleGroupJoinOrderSolver) checkConnection(leftPlan, rightPlan base.LogicalPlan) (leftNode, rightNode base.LogicalPlan, usedEdges []*expression.ScalarFunction, joinType *joinTypeWithExtMsg) {
 	joinType = &joinTypeWithExtMsg{JoinType: logicalop.InnerJoin}
 	leftNode, rightNode = leftPlan, rightPlan
+	fmt.Println("leftPlan", leftPlan)
+	fmt.Println("rightPlan", rightPlan)
 	for idx, edge := range s.eqEdges {
 		lCol := edge.GetArgs()[0].(*expression.Column)
 		rCol := edge.GetArgs()[1].(*expression.Column)

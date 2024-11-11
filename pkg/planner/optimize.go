@@ -133,6 +133,9 @@ func getPlanFromNonPreparedPlanCache(ctx context.Context, sctx sessionctx.Contex
 
 // Optimize does optimization and creates a Plan.
 func Optimize(ctx context.Context, sctx sessionctx.Context, node *resolve.NodeW, is infoschema.InfoSchema) (plan base.Plan, slice types.NameSlice, retErr error) {
+
+	//fmt.Println("这是一次测试：", ctx)
+
 	defer tracing.StartRegion(ctx, "planner.Optimize").End()
 	sessVars := sctx.GetSessionVars()
 	pctx := sctx.GetPlanCtx()
@@ -463,6 +466,7 @@ var planBuilderPool = sync.Pool{
 var optimizeCnt int
 
 func optimize(ctx context.Context, sctx planctx.PlanContext, node *resolve.NodeW, is infoschema.InfoSchema) (base.Plan, types.NameSlice, float64, error) {
+
 	failpoint.Inject("checkOptimizeCountOne", func(val failpoint.Value) {
 		// only count the optimization for SQL with specified text
 		if testSQL, ok := val.(string); ok && testSQL == node.Node.OriginalText() {

@@ -636,6 +636,9 @@ func (cc *clientConn) preparedStmt2String(stmtID uint32) string {
 	if m := sv.EnableRedactLog; m != errors.RedactLogEnable {
 		sql += redact.String(sv.EnableRedactLog, sv.PlanCacheParams.String())
 	}
+
+	// fmt.Println("这是一个测试1:", sql)
+
 	return sql
 }
 

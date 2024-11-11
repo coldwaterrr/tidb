@@ -948,6 +948,9 @@ func LogicalOptimizeTest(ctx context.Context, flag uint64, logic base.LogicalPla
 }
 
 func logicalOptimize(ctx context.Context, flag uint64, logic base.LogicalPlan) (base.LogicalPlan, error) {
+	fmt.Println("ctx:", ctx)
+	fmt.Println("flag:", flag)
+	fmt.Println("logic:", logic)
 	if logic.SCtx().GetSessionVars().StmtCtx.EnableOptimizerDebugTrace {
 		debugtrace.EnterContextCommon(logic.SCtx())
 		defer debugtrace.LeaveContextCommon(logic.SCtx())

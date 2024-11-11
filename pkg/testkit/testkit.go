@@ -396,6 +396,8 @@ func (tk *TestKit) Exec(sql string, args ...any) (sqlexec.RecordSet, error) {
 func (tk *TestKit) ExecWithContext(ctx context.Context, sql string, args ...any) (rs sqlexec.RecordSet, err error) {
 	defer tk.Session().GetSessionVars().ClearAlloc(&tk.alloc, err != nil)
 
+	//fmt.Println("这是一次测试：", sql)
+
 	cursorExists := tk.Session().GetSessionVars().HasStatusFlag(mysql.ServerStatusCursorExists)
 	if len(args) == 0 {
 		sc := tk.session.GetSessionVars().StmtCtx
