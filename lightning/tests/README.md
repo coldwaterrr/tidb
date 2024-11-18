@@ -1,10 +1,10 @@
-# Integration tests
+# 集成测试
 
-This folder contains all tests which relies on external processes such as TiDB.
+此文件夹包含所有依赖于外部进程（如 TiDB）的测试。
 
-## Preparations
+## 准备工作
 
-1. The following executables must be copied or linked into these locations:
+1. 必须将以下可执行文件复制或链接到这些位置：
 
     * `bin/tidb-server`
     * `bin/tikv-server`
@@ -13,13 +13,13 @@ This folder contains all tests which relies on external processes such as TiDB.
     * `bin/minio`
     * `bin/mc`
 
-    The versions must be ≥2.1.0.
+    版本必须 ≥2.1.0。
 
-    **Only some tests requires `minio`/`mc`** which can be downloaded from the official site, you can skip them if you don't need to run those cases.
+    **只有部分测试需要 `minio`/`mc`**，可以从官方网站下载，如果不需要运行这些测试，可以跳过。
 
-    You can use `tiup` to download binaries related to TiDB cluster, and then link them to the `bin` directory:
+    你可以使用 `tiup` 下载与 TiDB 集群相关的二进制文件，然后将它们链接到 `bin` 目录：
     ```shell
-    cluster_version=v8.1.0 # change to the version you need
+    cluster_version=v8.1.0 # 更改为你需要的版本
     tiup install tidb:$cluster_version tikv:$cluster_version pd:$cluster_version tiflash:$cluster_version
     ln -s ~/.tiup/components/tidb/$cluster_version/tidb-server bin/tidb-server
     ln -s ~/.tiup/components/tikv/$cluster_version/tikv-server bin/tikv-server
@@ -29,46 +29,43 @@ This folder contains all tests which relies on external processes such as TiDB.
 
 2. `make build_for_lightning_integration_test`
    
-    `make server` to build the latest TiDB server if your test requires it.
+    如果你的测试需要最新的 TiDB 服务器，运行 `make server` 来构建。
 
-3. The following programs must be installed:
+3. 必须安装以下程序：
 
-    * `mysql` (the CLI client)
+    * `mysql`（CLI 客户端）
     * `curl`
     * `openssl`
     * `wget`
     * `lsof`
 
-4. The user executing the tests must have permission to create the folder
-    `/tmp/lightning_test`. All test artifacts will be written into this folder.
+4. 执行测试的用户必须有权限创建文件夹 `/tmp/lightning_test`。所有测试工件将写入此文件夹。
 
-## Running
+## 运行
 
-Run `make lightning_integration_test` to execute all the integration tests.
-- Logs will be written into `/tmp/lightning_test` directory.
+运行 `make lightning_integration_test` 来执行所有集成测试。
+- 日志将写入 `/tmp/lightning_test` 目录。
 
-Run `tests/run.sh --debug` to pause immediately after all servers are started.
+运行 `tests/run.sh --debug` 在所有服务器启动后立即暂停。
 
-If you only want to run some tests, you can use:
+如果你只想运行某些测试，可以使用：
 ```shell
 TEST_NAME="lightning_gcs lightning_view" lightning/tests/run.sh
 ```
 
-Case names are separated by spaces.
+测试用例名称用空格分隔。
 
-## Writing new tests
+## 编写新测试
 
-1. New integration tests can be written as shell scripts in `tests/TEST_NAME/run.sh`.
-    - `TEST_NAME` should start with `lightning_`.
-    - The script should exit with a nonzero error code on failure.
-2. Add TEST_NAME to existing group in [run_group_lightning_tests.sh](./run_group_lightning_tests.sh)(Recommended), or add a new group for it.
-3. If you add a new group, the name of the new group must be added to CI  [lightning-integration-test](https://github.com/PingCAP-QE/ci/blob/main/pipelines/pingcap/tidb/latest/pull_lightning_integration_test.groovy).
+1. 新的集成测试可以作为 shell 脚本编写在 `tests/TEST_NAME/run.sh` 中。
+    - `TEST_NAME` 应以 `lightning_` 开头。
+    - 脚本在失败时应以非零错误代码退出。
+2. 将 TEST_NAME 添加到 [run_group_lightning_tests.sh](./run_group_lightning_tests.sh) 中的现有组（推荐），或为其添加一个新组。
+3. 如果你添加了一个新组，必须将新组的名称添加到 CI [lightning-integration-test](https://github.com/PingCAP-QE/ci/blob/main/pipelines/pingcap/tidb/latest/pull_lightning_integration_test.groovy)。
 
-Several convenient commands are provided in [utils](../../tests/_utils/):
+在 [utils](../../tests/_utils/) 中提供了几个方便的命令：
 
-* `run_sql <SQL>` — Executes an SQL query on the TiDB database
-* `run_lightning [CONFIG]` — Starts `tidb-lightning` using `tests/TEST_NAME/CONFIG.toml`
-* `check_contains <TEXT>` — Checks if the previous `run_sql` result contains the given text
-    (in `-E` format)
-* `check_not_contains <TEXT>` — Checks if the previous `run_sql` result does not contain the given
-    text (in `-E` format)
+* `run_sql <SQL>` — 在 TiDB 数据库上执行 SQL 查询
+* `run_lightning [CONFIG]` — 使用 `tests/TEST_NAME/CONFIG.toml` 启动 `tidb-lightning`
+* `check_contains <TEXT>` — 检查之前的 `run_sql` 结果是否包含给定文本（以 `-E` 格式）
+* `check_not_contains <TEXT>` — 检查之前的 `run_sql` 结果是否不包含给定文本（以 `-E` 格式）

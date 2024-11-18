@@ -1,40 +1,40 @@
 # TiDB-Lightning
 
-**TiDB-Lightning** is a tool used for importing data at TB scale to TiDB clusters.
+**TiDB-Lightning** 是一个用于将 TB 级数据导入 TiDB 集群的工具。
 
-## Documentation
+## 文档
 
 [中文文档](https://docs.pingcap.com/zh/tidb/stable/tidb-lightning-overview)
 
-[English Document](https://docs.pingcap.com/tidb/stable/tidb-lightning-overview)
+[英文文档](https://docs.pingcap.com/tidb/stable/tidb-lightning-overview)
 
-[Import Into Statement](https://docs.pingcap.com/tidbcloud/sql-statement-import-into) is used to import data files or result from select statement into an empty table in TiDB via the Physical Import Mode of TiDB Lightning.
+[Import Into 语句](https://docs.pingcap.com/tidbcloud/sql-statement-import-into) 用于通过 TiDB Lightning 的物理导入模式将数据文件或 select 语句的结果导入 TiDB 中的空表。
 
-## Building
+## 构建
 
-To build binary:
+构建二进制文件：
 
 ```bash
 $ cd ../tidb
 $ make build_lightning
 ```
 
-Notice TiDB-Lightning supports building with Go version `Go >= 1.16`
+注意 TiDB-Lightning 支持使用 Go 版本 `Go >= 1.16` 进行构建。
 
-When TiDB-Lightning is built successfully, you can find binary in the `bin` directory.
+当 TiDB-Lightning 构建成功后，你可以在 `bin` 目录中找到二进制文件。
 
-## Running tests
+## 运行测试
 
-See [this document](../lightning/tests/README.md) for how to run integration tests.
+请参阅[此文档](../lightning/tests/README.md)了解如何运行集成测试。
 
-## Quick start
-See [Quick Start for TiDB Lightning](https://docs.pingcap.com/tidb/stable/get-started-with-tidb-lightning).
+## 快速开始
 
-## Contributing
+请参阅[TiDB Lightning 快速开始](https://docs.pingcap.com/tidb/stable/get-started-with-tidb-lightning)。
 
-Contributions are welcomed and greatly appreciated. See [CONTRIBUTING](../CONTRIBUTING.md)
-for details on submitting patches and the contribution workflow.
+## 贡献
 
-## License
+欢迎并非常感谢您的贡献。有关提交补丁和贡献工作流程的详细信息，请参阅[贡献指南](../CONTRIBUTING.md)。
 
-TiDB-Lightning is under the Apache 2.0 license. See the [LICENSE](../LICENSE) file for details.
+## 许可证
+
+TiDB-Lightning 使用 Apache 2.0 许可证。有关详细信息，请参阅[许可证](../LICENSE)文件。
