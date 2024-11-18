@@ -41,7 +41,7 @@ table-concurrency = 6
 # Non-fatal errors are those that are localized to a few rows, and ignoring those rows allow the import process to continue.
 # Setting this to N means Lightning will stop as soon as possible when the (N+1)-th error is encountered.
 # The skipped rows will be inserted to tables inside the "task info" schema on the target TiDB, which can be configured below.
-max-error = 0
+max-error = 10
 # task-info-schema-name is the name of the schema/database storing human-readable Lightning execution result.
 # set this to empty string to disable error recording.
 #task-info-schema-name = 'lightning_task_info'
@@ -70,7 +70,7 @@ max-backups = 14
 # Whether to enable checkpoints.
 # While importing, Lightning will record which tables have been imported, so even if Lightning or other component
 # crashed, we could start from a known good state instead of redoing everything.
-enable = true
+enable = false
 # The schema name (database name) to store the checkpoints
 schema = "tidb_lightning_checkpoint"
 # Where to store the checkpoints.
@@ -188,7 +188,7 @@ batch-import-ratio = 0.75
 
 # mydumper local source data directory
 # data-source-dir = "/tmp/export-20180328-200751"
-data-source-dir = "/home/zbw/imdb_pg_dataset/imdb_2"
+data-source-dir = "/home/zbw/imdb_pg_dataset/imdb"
 # if no-schema is set true, lightning will get schema information from tidb-server directly without creating them.
 no-schema = false
 # the character set of the schema files; only supports one of:
@@ -259,7 +259,7 @@ header = false
 not-null = false
 # if non-null = false (i.e. CSV can contain NULL), fields equal to this value will be treated as NULL
 # null = '\N'
-null = ''
+null = ""
 # whether to interpret backslash-escape inside strings.
 backslash-escape = true
 # if a line ends with a separator, remove it.
